@@ -50,7 +50,10 @@ public class SkeletonRender : MonoBehaviour {
 		if (skeletonManager == null) return;
 		
 		Kinect.Body[] data = skeletonManager.GetData();
-		if (data == null) return;
+        if (data == null)
+        {
+            return;
+        }
 		
 		List<ulong> trackingIds = new List<ulong> ();
 		foreach (var body in data) {
@@ -113,7 +116,7 @@ public class SkeletonRender : MonoBehaviour {
 	}
 	
 	private GameObject addBone(string name, float radius, GameObject prefab, Transform body, Kinect.JointType joint1, Kinect.JointType? joint2 = null) {
-		GameObject bone = (GameObject) Instantiate(prefab, Vector3.zero, Quaternion.identity);
+        GameObject bone = (GameObject) Instantiate(prefab, Vector3.zero, Quaternion.identity);
 		bone.name = name; bone.transform.parent = body;
 		BoneScript script = bone.GetComponent("BoneScript") as BoneScript;
 		script.radius = radius;
