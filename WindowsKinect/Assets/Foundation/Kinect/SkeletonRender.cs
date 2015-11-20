@@ -12,6 +12,8 @@ public class SkeletonRender : MonoBehaviour {
 	public static GameObject head;
 	public static GameObject[] bones;
 	private SkeletonManager skeletonManager;
+
+	private string message;
 	
 	private Dictionary<Kinect.JointType, Kinect.JointType> _BoneMap = new Dictionary<Kinect.JointType, Kinect.JointType>()
 	{
@@ -128,6 +130,7 @@ public class SkeletonRender : MonoBehaviour {
 	}
 	
 	private void RefreshBodyObject(Kinect.Body body, GameObject bodyObject) {
+		string[] save = new string[25];
 		for (Kinect.JointType jt = Kinect.JointType.SpineBase; jt <= Kinect.JointType.ThumbRight; jt++) {
 			Kinect.Joint sourceJoint = body.Joints[jt];
 			Transform jointObj = bodyObject.transform.FindChild(jt.ToString());
@@ -138,10 +141,22 @@ public class SkeletonRender : MonoBehaviour {
                 Camera.main.transform.Rotate(new Vector3(0, 180, 0));
                 Camera.main.transform.position = (Vector3)jointObj.transform.position;
             }
+
+			float xval = (int) ((jointObj.position.x)* 10000)/10000f;
+			float yval = (int) ((jointObj.position.y) * 10000)/10000f;
+			float zval = (int) ((jointObj.position.z) * 10000)/10000f;
+			save[(int) jt] += xval.ToString() + " " + yval.ToString() + " " + zval.ToString() + " ";
 		}
+		message = "/" + save [3] + save [20] + save [8] + save [4] + save [9] + save [5] +
+			save [0] + save [10] + save [6] + save [16] + save [12] + save [17] + save [13] + 
+			save [18] + save [14];
 	}
 	
 	private static Vector3 GetVector3FromJoint(Kinect.Joint joint) {
-		return new Vector3(joint.Position.X * 10, joint.Position.Y * 10, joint.Position.Z * 10);
+		return new Vector3(joint.Position.X * -10, joint.Position.Y * 10, joint.Position.Z * 10);
+	}
+
+	public string getString() {
+		return message;
 	}
 }

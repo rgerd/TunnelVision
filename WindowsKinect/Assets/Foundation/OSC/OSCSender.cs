@@ -6,6 +6,8 @@ public class OSCSender : MonoBehaviour {
 	public int sendToPort = 9000;
 	public int listenerPort = 8000;
 	private Osc handler = null;
+
+	private SkeletonRender skeletonrender;
 	
 	void Start() {
 		UDPPacketIO udp = (UDPPacketIO) GetComponent("UDPPacketIO");
@@ -13,11 +15,13 @@ public class OSCSender : MonoBehaviour {
 		handler = (Osc) GetComponent("Osc");
 		handler.init(udp);
 		//oscHandler.SetAddressHandler("/1/push1", Example);
+		skeletonrender = GetComponent<SkeletonRender> ();
 	}
 	
 	void Update() {
-		string message = "";
+		string message = skeletonrender.getString ();
 		OscMessage oscM = null;
+		Debug.Log ("/" + message);
 		oscM = Osc.StringToOscMessage("/" + message);
 		handler.Send(oscM);
 	}

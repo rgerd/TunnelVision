@@ -21,6 +21,8 @@ public class Osc : MonoBehaviour {
 	private OscMessageHandler AllMessageHandler;
 	Hashtable AddressTable;
 
+	void Start() {}
+
 	public void init(UDPPacketIO oscPacketIO){
 		OscPacketIO = oscPacketIO;
 		AddressTable = new Hashtable();
