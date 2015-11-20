@@ -4,11 +4,14 @@ using System.Collections;
 public class DrawingScript : MonoBehaviour {
 	private int markerRadius = 5;
 	private Color markerColor;
+
 	private Vector3 rightCorrectDrawVec;
 	private Vector3 rightDrawVec;
+
 	private Vector3 leftCorrectDrawVec;
 	private Vector3 leftDrawVec;
-	private Vector2 lastMark;
+
+	private Vector2 lastMark = new Vector2(-1, -1);
 
 	void Start () {}
 	
@@ -82,7 +85,6 @@ public class DrawingScript : MonoBehaviour {
 		lr.SetColors(markerColor, markerColor);
 		lr.SetPosition(0, pt1);
 		lr.SetPosition(1, pt2);
-		
 	}
 	
 	
@@ -92,42 +94,39 @@ public class DrawingScript : MonoBehaviour {
 		Renderer rend = hit.transform.GetComponent<Renderer>();
 		Texture2D tex = rend.material.mainTexture as Texture2D;
 		Vector2 pixelUV = hit.textureCoord;
-		Debug.Log (pixelUV.x + ", " + pixelUV.y);
 		pixelUV.x *= tex.width;
 		pixelUV.y *= tex.height;
-
-		//for (float i = 0; i <= 1f; i += 0.5f) {
-			//Vector2 l = Vector2.Lerp (lastMark, new Vector2(pixelUV.x, pixelUV.y), i);
-			drawCircle(tex, (int) pixelUV.x, (int) pixelUV.y, markerRadius, markerColor);
-		//}
+		Vector2 thisMark = new Vector2 (pixelUV.x, pixelUV.y);
+		if (lastMark == new Vector2(-1, -1))
+			lastMark = thisMark;
+			
+		drawCircle(tex, lastMark, thisMark, markerRadius, markerColor);
 
 		lastMark = new Vector2 (pixelUV.x, pixelUV.y);
 		tex.Apply();
 	}
 	
-	private void drawCircle(Texture2D tex, int cx, int cy, int r, Color col)
+	private void drawCircle(Texture2D tex, Vector2 start, Vector2 end, int r, Color col)
 	{
 
-		int x, y, px, nx, py, ny, d;
-		
-		for (x = 0; x <= r; x++)
-		{
-			d = (int)Mathf.Ceil(Mathf.Sqrt(r * r - x * x));
-			for (y = 0; y <= d; y++)
-			{
-				px = cx + x;
-				nx = cx - x;
-				py = cy + y;
-				ny = cy - y;
-				
-				tex.SetPixel(px, py, col);
-				tex.SetPixel(nx, py, col);
-				
-				tex.SetPixel(px, ny, col);
-				tex.SetPixel(nx, ny, col);
-			}
-		}
+		int dx = (int)(end.x - start.x);
+		int dy = (int)(end.y - start.y);
+		int d =  (int) Mathf.Sqrt (dx * dx + dy * dy);
 
+		for (int i = 0; i < d; i++) {
+			float p = (float) i / (float) d;
+			int _x = (int) (start.x + dx * p);
+			int _y = (int) (start.y + dy * p);
+			tex.SetPixel(_x, _y, col);
+			tex.SetPixel(_x + 1, _y + 1, col);
+			tex.SetPixel(_x + 1, _y - 1, col);
+			tex.SetPixel(_x - 1, _y + 1, col);
+			tex.SetPixel(_x - 1, _y - 1, col);
+			tex.SetPixel(_x, _y + 1, col);
+			tex.SetPixel(_x, _y - 1, col);
+			tex.SetPixel(_x + 1, _y, col);
+			tex.SetPixel(_x - 1, _y, col);
+		}
 
 	}
 }
