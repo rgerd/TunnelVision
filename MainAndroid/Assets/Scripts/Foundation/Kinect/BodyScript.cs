@@ -143,8 +143,6 @@ public class BodyScript : MonoBehaviour {
 			rotationAcc = 0;
 			rotationDirection = 0;
 		}
-
-		transform.Translate(Input.GetAxis("Mouse X") * 10 * Time.deltaTime, 0, Input.GetAxis("Mouse Y") * 10 * Time.deltaTime);
 	}
 
 	private GameObject addBone(string name, float radius, GameObject prefab, JointType joint1, JointType joint2) {
