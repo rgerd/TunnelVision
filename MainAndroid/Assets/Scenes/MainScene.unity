@@ -356,6 +356,10 @@ Prefab:
       propertyPath: camHolder
       value: 
       objectReference: {fileID: 2029286398}
+    - target: {fileID: 11410900, guid: 669f1c126df76414ca13ee43b5189237, type: 2}
+      propertyPath: rotationSpeed
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 669f1c126df76414ca13ee43b5189237, type: 2}
   m_IsPrefabParent: 0
