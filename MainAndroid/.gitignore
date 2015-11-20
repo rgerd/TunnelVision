@@ -14,7 +14,6 @@
 *.userprefs
 *.pidb
 *.booproj
-*.meta
  
 # ReSharper is a .NET coding add-in
 _ReSharper*/
