@@ -35,7 +35,7 @@ public class BodyScript : MonoBehaviour {
 		RightLegBottom,
 		LeftLegBottom
 	}
-
+	public GameObject camHolder;
 	public GameObject northWall;
 	public GameObject southWall;
 	public GameObject eastWall;
@@ -107,7 +107,7 @@ public class BodyScript : MonoBehaviour {
 
 		transform.position.Set (transform.position.x, -joints [(int)JointType.AnkleLeft].transform.position.y, transform.position.z);
 
-		Camera.main.transform.position = head.transform.position;
+		camHolder.transform.position = head.transform.position;
 
 		handLeftState = OSCReceiver.hand_states [0];
 		handRightState = OSCReceiver.hand_states [1];

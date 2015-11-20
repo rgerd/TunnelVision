@@ -51,7 +51,6 @@ public class DrawingScript : MonoBehaviour {
 				//Debug.Log("hit whiteboard");
 				markerColor = Color.red;
 				drawRayLine(lr, ray.origin, hit.point);
-				Debug.Log (handState);
 				if (handState == "Closed")
 					drawWhiteboard(hit);
 			}
@@ -97,10 +96,10 @@ public class DrawingScript : MonoBehaviour {
 		pixelUV.x *= tex.width;
 		pixelUV.y *= tex.height;
 
-		for (float i = 0; i <= 1f; i += 0.5f) {
-			Vector2 l = Vector2.Lerp (lastMark, new Vector2(pixelUV.x, pixelUV.y), i);
-			drawCircle(tex, (int) l.x, (int) l.y, markerRadius, markerColor);
-		}
+		//for (float i = 0; i <= 1f; i += 0.5f) {
+			//Vector2 l = Vector2.Lerp (lastMark, new Vector2(pixelUV.x, pixelUV.y), i);
+			drawCircle(tex, (int) pixelUV.x, (int) pixelUV.y, markerRadius, markerColor);
+		//}
 
 		lastMark = new Vector2 (pixelUV.x, pixelUV.y);
 		tex.Apply();

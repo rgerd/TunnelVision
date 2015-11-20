@@ -39,6 +39,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c1f7a6f534645049b5d2a4b0baf3e6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camHolder: {fileID: 0}
+  northWall: {fileID: 0}
+  southWall: {fileID: 0}
+  eastWall: {fileID: 0}
+  westWall: {fileID: 0}
   head_prefab: {fileID: 116708, guid: 62e7a8fa158485940b556c8ab79f446f, type: 2}
   bone_prefab: {fileID: 142722, guid: 6a3be0aa79bbcf24d86666dab998835c, type: 2}
 --- !u!1001 &100100000
