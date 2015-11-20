@@ -20,6 +20,9 @@ public class DrawingScript : Photon.MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (BodyScript.joints == null)
+			return;
+
 		Vector3 rightCorrectDrawVec = BodyScript.joints [(int)BodyScript.JointType.WristRight].transform.position - BodyScript.joints [(int)BodyScript.JointType.ElbowRight].transform.position;
 		Vector3 leftCorrectDrawVec  = BodyScript.joints [(int)BodyScript.JointType.WristLeft].transform.position  - BodyScript.joints [(int)BodyScript.JointType.ElbowLeft].transform.position;
 

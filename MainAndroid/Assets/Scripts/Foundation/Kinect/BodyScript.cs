@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class BodyScript : MonoBehaviour {
+public class BodyScript : Photon.MonoBehaviour {
 	public enum JointType
 	{
 		Head,
@@ -58,6 +58,50 @@ public class BodyScript : MonoBehaviour {
 	private Vector2 normalLean;
 
 	void Start () {
+
+
+		//Connect to the main photon server. This is the only IP and port we ever need to set(!)
+		if (!PhotonNetwork.connected)
+		{
+			Debug.Log("photon not connected yet. try connecting");
+			PhotonNetwork.ConnectUsingSettings("1.0"); // version of the game/demo. used to separate older clients from newer ones (e.g. if incompatible)
+		}
+		//Load name from PlayerPrefs
+		PhotonNetwork.playerName = PlayerPrefs.GetString("playerName", "Guest" + UnityEngine.Random.Range(1, 9999));
+		//Set camera clipping for nicer "main menu" background
+		Camera.main.farClipPlane = Camera.main.nearClipPlane + 0.1f;
+
+
+
+	}
+
+
+	void OnJoinedLobby()
+	{
+		Debug.Log("Joined Photon Lobby");
+		if (PhotonNetwork.room != null)
+			return; //Only when we're not in a Room
+		
+		//if (PhotonNetwork.GetRoomList().Length == 0)
+		//{
+		//    PhotonNetwork.CreateRoom(roomName, new RoomOptions() { maxPlayers = 2 }, TypedLobby.Default);
+		//}
+		//else
+		//{
+		//PhotonNetwork.CreateRoom("Whiteboard");
+		//PhotonNetwork.CreateRoom("Default");
+		
+		//PhotonNetwork.JoinRoom("Whiteboard");
+		
+		PhotonNetwork.JoinOrCreateRoom("Whiteboard", new RoomOptions() { maxPlayers = 2 }, TypedLobby.Default);
+		//}
+	}
+
+	void OnJoinedRoom()
+	{
+		Debug.Log("JOIN whiteboard room");
+		Camera.main.farClipPlane = 1000; //Main menu set this to 0.4 for a nicer BG    
+		
 		joints = new GameObject[15];
 		foreach (JointType joint in Enum.GetValues(typeof (JointType))) {
 			GameObject jointObj = new GameObject (joint.ToString ());
@@ -65,31 +109,34 @@ public class BodyScript : MonoBehaviour {
 			jointObj.transform.parent = transform;
 			joints [(int)joint] = jointObj; 
 		}
-
-		head = (GameObject) Instantiate (head_prefab, Vector3.zero, Quaternion.identity);//new GameObject (joint.ToString ());
+		
+		head = PhotonNetwork.Instantiate ("Head", Vector3.zero, Quaternion.identity, 0);
+		//(GameObject) Instantiate (head_prefab, Vector3.zero, Quaternion.identity);//new GameObject (joint.ToString ());
 		head.name = "_Head";
 		head.transform.parent = transform;
-
+		
 		bones = new GameObject[9];
 		bones[(int)BoneType.Core] = addBone("Core", 1.5f, bone_prefab, JointType.SpineBase, JointType.SpineShoulder);
-
+		
 		bones[(int)BoneType.LeftArmTop] = addBone("LeftArmTop", 0.8f, bone_prefab, JointType.ShoulderLeft, JointType.ElbowLeft);
 		bones[(int)BoneType.LeftArmBottom] = addBone("LeftArmBottom", 0.5f, bone_prefab, JointType.ElbowLeft, JointType.WristLeft);
-
+		
 		bones[(int)BoneType.RightArmTop] = addBone("RightArmTop", 0.8f, bone_prefab, JointType.ShoulderRight, JointType.ElbowRight);
 		bones[(int)BoneType.RightArmBottom] = addBone("RightArmBottom", 0.5f, bone_prefab, JointType.ElbowRight, JointType.WristRight);
-
+		
 		bones[(int)BoneType.LeftLegTop] = addBone("LeftLegTop", 0.8f, bone_prefab, JointType.HipLeft, JointType.KneeLeft);
 		bones[(int)BoneType.LeftLegBottom] = addBone("LeftLegBottom", 0.5f, bone_prefab, JointType.KneeLeft, JointType.AnkleLeft);
-
+		
 		bones[(int)BoneType.RightLegTop] = addBone("RightLegTop", 0.8f, bone_prefab, JointType.HipRight, JointType.KneeRight);
 		bones[(int)BoneType.RightLegBottom] = addBone("RightLegBottom", 0.5f, bone_prefab, JointType.KneeRight, JointType.AnkleRight);
-
+		
 		calcLean ();
 		normalLean = lean;
-
+		
 		camHolder.transform.Rotate (Camera.main.transform.localRotation.eulerAngles * -1);
 	}
+
+
 
 	void Update () {
 		float[] data = OSCReceiver.vars;
@@ -161,7 +208,8 @@ public class BodyScript : MonoBehaviour {
 	}
 
 	private GameObject addBone(string name, float radius, GameObject prefab, JointType joint1, JointType joint2) {
-		GameObject bone = (GameObject) Instantiate(prefab, Vector3.zero, Quaternion.identity);
+		GameObject bone = PhotonNetwork.Instantiate ("Bone", Vector3.zero, Quaternion.identity, 0);
+			//(GameObject) Instantiate(prefab, Vector3.zero, Quaternion.identity);
 		bone.name = name; bone.transform.parent = transform;
 		BoneScript script = bone.GetComponent("BoneScript") as BoneScript;
 		script.radius = radius;

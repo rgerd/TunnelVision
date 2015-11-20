@@ -350,7 +350,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 407850, guid: 669f1c126df76414ca13ee43b5189237, type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 11410900, guid: 669f1c126df76414ca13ee43b5189237, type: 2}
       propertyPath: camHolder
@@ -404,7 +404,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11487112, guid: 1ad220c5c269cce4091daa17e567b836, type: 2}
       propertyPath: remoteIP
-      value: 172.22.173.207
+      value: 172.20.10.6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1ad220c5c269cce4091daa17e567b836, type: 2}
@@ -1042,7 +1042,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1570371898}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7596cac6da23a4c7a817bf686ec50a43, type: 3}
   m_Name: 
