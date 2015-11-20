@@ -55,6 +55,7 @@ public class BodyScript : MonoBehaviour {
 	public static string handRightState;
 
 	private Vector2 lean;
+	private Vector2 normalLean;
 
 	void Start () {
 		joints = new GameObject[15];
@@ -84,8 +85,8 @@ public class BodyScript : MonoBehaviour {
 		bones[(int)BoneType.RightLegTop] = addBone("RightLegTop", 0.8f, bone_prefab, JointType.HipRight, JointType.KneeRight);
 		bones[(int)BoneType.RightLegBottom] = addBone("RightLegBottom", 0.5f, bone_prefab, JointType.KneeRight, JointType.AnkleRight);
 
-		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.position - joints [(int)JointType.SpineBase].transform.position;
-		lean = new Vector2 (lean3.x, lean3.z);
+		calcLean ();
+		normalLean = lean;
 
 		camHolder.transform.Rotate (Camera.main.transform.localRotation.eulerAngles * -1);
 	}
@@ -120,11 +121,15 @@ public class BodyScript : MonoBehaviour {
 		handLeftState = OSCReceiver.hand_states [0];
 		handRightState = OSCReceiver.hand_states [1];
 
-		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.localPosition - joints [(int)JointType.SpineBase].transform.localPosition;
-		lean = new Vector2 (lean3.x, lean3.z) / bones[(int)BoneType.Core].transform.localScale.y;
-		if(Mathf.Abs (lean.y) > 0.5 || Mathf.Abs(lean.x) > 0.2)
-				transform.Translate(lean.x * 10 * Time.deltaTime, 0, lean.y * 10 * Time.deltaTime);
 
+
+		calcLean ();
+		if ((lean - normalLean).magnitude > 0.2) {
+			transform.Translate ((lean.x - normalLean.x) * 10 * Time.deltaTime, 0, (lean.y - normalLean.y) * 10 * Time.deltaTime);
+		} else {
+			normalLean = (lean + normalLean) / 2;
+		}
+			
 		if (Input.GetAxis ("Mouse X") < -0.75) {
 			rotationAcc = 90;
 			rotationDirection = -1;
@@ -155,5 +160,10 @@ public class BodyScript : MonoBehaviour {
 		script.joint1 = transform.FindChild (joint1.ToString()).gameObject;
 		script.joint2 = transform.FindChild (joint2.ToString()).gameObject;
 		return bone;
+	}
+
+	private void calcLean() {
+		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.localPosition - joints [(int)JointType.SpineBase].transform.localPosition;
+		lean = new Vector2 (lean3.x, lean3.z) / bones [(int)BoneType.Core].transform.localScale.y;
 	}
 }

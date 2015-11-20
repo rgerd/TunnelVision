@@ -358,7 +358,7 @@ Prefab:
       objectReference: {fileID: 2029286398}
     - target: {fileID: 11410900, guid: 669f1c126df76414ca13ee43b5189237, type: 2}
       propertyPath: rotationSpeed
-      value: 20
+      value: 80
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 669f1c126df76414ca13ee43b5189237, type: 2}
@@ -404,7 +404,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11487112, guid: 1ad220c5c269cce4091daa17e567b836, type: 2}
       propertyPath: remoteIP
-      value: 172.20.10.2
+      value: 172.20.10.7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1ad220c5c269cce4091daa17e567b836, type: 2}

@@ -97,9 +97,9 @@ public class DrawingScript : MonoBehaviour {
 		pixelUV.x *= tex.width;
 		pixelUV.y *= tex.height;
 		Vector2 thisMark = new Vector2 (pixelUV.x, pixelUV.y);
-		if (lastMark == null)
+		if (lastMark == null && thisMark != new Vector2(0, 0))
 			lastMark = thisMark;
-			
+
 		drawCircle(tex, (Vector2) lastMark, thisMark, markerRadius, markerColor);
 
 		lastMark = new Vector2 (pixelUV.x, pixelUV.y);
