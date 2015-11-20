@@ -103,14 +103,14 @@ public class BodyScript : MonoBehaviour {
 			float x = data[_i]; 
 			float y = data[_i + 1]; 
 			float z = data[_i + 2];
-			Vector3 newPosition = new Vector3(x, y, z);
-			newPosition.x = Mathf.Clamp(newPosition.x, westWall.transform.position.x, eastWall.transform.position.x);
-			newPosition.z = Mathf.Clamp(newPosition.x, southWall.transform.position.z, northWall.transform.position.z);
+			//Vector3 newPosition = new Vector3(x, y, z);
+			//newPosition.x = Mathf.Clamp(newPosition.x, westWall.transform.position.x, eastWall.transform.position.x);
+			//newPosition.z = Mathf.Clamp(newPosition.x, southWall.transform.position.z, northWall.transform.position.z);
 
-			joint.transform.position = Vector3.Lerp (joint.transform.position, new Vector3(x, y, z), Time.deltaTime * 10);
+			joint.transform.localPosition = Vector3.Lerp (joint.transform.localPosition, new Vector3(x, y, z), Time.deltaTime * 10);
 		}
 
-		head.transform.localPosition = joints [0].transform.position;
+		head.transform.localPosition = joints [0].transform.localPosition;
 
 		if(joints [(int)JointType.AnkleLeft].transform.position.y < 0)
 			transform.position.Set (transform.position.x, -joints [(int)JointType.AnkleLeft].transform.position.y, transform.position.z);
@@ -120,9 +120,8 @@ public class BodyScript : MonoBehaviour {
 		handLeftState = OSCReceiver.hand_states [0];
 		handRightState = OSCReceiver.hand_states [1];
 
-		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.position - joints [(int)JointType.SpineBase].transform.position;
+		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.localPosition - joints [(int)JointType.SpineBase].transform.localPosition;
 		lean = new Vector2 (lean3.x, lean3.z) / bones[(int)BoneType.Core].transform.localScale.y;
-		Debug.Log (lean.magnitude);
 		if(Mathf.Abs (lean.y) > 0.5 || Mathf.Abs(lean.x) > 0.2)
 				transform.Translate(lean.x * 10 * Time.deltaTime, 0, lean.y * 10 * Time.deltaTime);
 
