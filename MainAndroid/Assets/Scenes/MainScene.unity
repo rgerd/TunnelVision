@@ -89,18 +89,6 @@ NavMeshSettings:
 GameObject:
   m_PrefabParentObject: {fileID: 134544, guid: 214f7f557df4f4835be2265b68e896a9, type: 2}
   m_PrefabInternal: {fileID: 585723431}
---- !u!64 &5922803
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 5922802}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 0
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &5922806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +101,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textureWidth: 1600
-  textureHeight: 400
+  textureHeight: 800
+--- !u!64 &5922808
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 5922802}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 0
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &80493116
 Prefab:
   m_ObjectHideFlags: 0
@@ -195,8 +195,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd91899b505bd439ab7aece7fc6d3703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureWidth: 800
-  textureHeight: 200
+  textureWidth: 1600
+  textureHeight: 800
 --- !u!1001 &346519204
 Prefab:
   m_ObjectHideFlags: 0
@@ -289,18 +289,6 @@ Prefab:
 GameObject:
   m_PrefabParentObject: {fileID: 114602, guid: 214f7f557df4f4835be2265b68e896a9, type: 2}
   m_PrefabInternal: {fileID: 585723431}
---- !u!64 &370577282
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 370577281}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 0
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &370577285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,8 +300,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd91899b505bd439ab7aece7fc6d3703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureWidth: 800
-  textureHeight: 200
+  textureWidth: 1600
+  textureHeight: 800
+--- !u!64 &370577287
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 370577281}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 0
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &426181238
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,18 +357,6 @@ Transform:
 GameObject:
   m_PrefabParentObject: {fileID: 198376, guid: 214f7f557df4f4835be2265b68e896a9, type: 2}
   m_PrefabInternal: {fileID: 585723431}
---- !u!64 &580035328
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 580035327}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Convex: 0
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &580035331
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,8 +368,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd91899b505bd439ab7aece7fc6d3703, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textureWidth: 800
-  textureHeight: 200
+  textureWidth: 1600
+  textureHeight: 800
+--- !u!64 &580035333
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 580035327}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Convex: 0
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &585723431
 Prefab:
   m_ObjectHideFlags: 0
