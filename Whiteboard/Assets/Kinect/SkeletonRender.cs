@@ -12,8 +12,15 @@ public class SkeletonRender : MonoBehaviour {
 	public static GameObject head;
 	public static GameObject[] bones;
 	private SkeletonManager skeletonManager;
-	
-	private Dictionary<Kinect.JointType, Kinect.JointType> _BoneMap = new Dictionary<Kinect.JointType, Kinect.JointType>()
+
+    private Vector3 leftCorrectDrawVec = Vector3.zero;
+    private Vector3 leftDrawVec = Vector3.zero;
+    private Vector3 rightCorrectDrawVec = Vector3.zero;
+    private Vector3 rightDrawVec = Vector3.zero;
+    private Color markerColor = Color.white;
+    private int markerRadius = 3;
+
+    private Dictionary<Kinect.JointType, Kinect.JointType> _BoneMap = new Dictionary<Kinect.JointType, Kinect.JointType>()
 	{
 		{ Kinect.JointType.FootLeft, Kinect.JointType.AnkleLeft },
 		{ Kinect.JointType.AnkleLeft, Kinect.JointType.KneeLeft },
@@ -44,6 +51,10 @@ public class SkeletonRender : MonoBehaviour {
 		{ Kinect.JointType.SpineShoulder, Kinect.JointType.Neck },
 		{ Kinect.JointType.Neck, Kinect.JointType.Head },
 	};
+
+    void Start ()
+    {
+    }
 	
 	void Update () {
 		skeletonManager = GetComponent<SkeletonManager>();
@@ -141,43 +152,129 @@ public class SkeletonRender : MonoBehaviour {
                 Camera.main.transform.Rotate(new Vector3(0, 180, 0));
                 Camera.main.transform.position = (Vector3)jointObj.transform.position;
             }
-
-            if (jt == Kinect.JointType.HandRight)
-            {
-                //Debug.Log((Vector3)jointObj.transform.position);
-            }
 		}
 
-        Debug.Log(body.HandRightState);
-        if (body.HandRightState == Kinect.HandState.Lasso)
-        {
-            RaycastHit hit;
-            Transform elbowRightObj = bodyObject.transform.FindChild(Kinect.JointType.ElbowRight.ToString());
-            Transform handRightObj = bodyObject.transform.FindChild(Kinect.JointType.ElbowRight.ToString());
-            Ray ray = new Ray(elbowRightObj.position, handRightObj.position - elbowRightObj.position);
-            if (Physics.Raycast(ray, out hit))
-            {
-                if (hit.collider.tag == "whiteboard")
-                {
-                    Debug.Log("drawing on whiteboard");
-                    Debug.DrawLine(ray.origin, hit.point);
 
-                    Renderer rend = hit.transform.GetComponent<Renderer>();
-                    MeshCollider meshCollider = hit.collider as MeshCollider;
-                    Texture2D tex = rend.material.mainTexture as Texture2D;
-                    Vector2 pixelUV = hit.textureCoord;
-                    pixelUV.x *= tex.width;
-                    pixelUV.y *= tex.height;
-                    tex.SetPixel((int)pixelUV.x, (int)pixelUV.y, Color.red);
-                    //drawCircle(tex, (int)pixelUV.x, (int)pixelUV.y, radius, color);
-                    tex.Apply();
-                }
-                //WhiteboardExample.draw(ray, hit, Color.red, 2);
-            }
-        }
+        whiteboard_raytrace(bodyObject.transform.FindChild(Kinect.JointType.ElbowRight.ToString()),
+            bodyObject.transform.FindChild(Kinect.JointType.HandRight.ToString()),
+            body.HandRightState,
+            GameObject.Find("RightHandDraw").GetComponent<LineRenderer>(),
+            "right");
+
+
+        whiteboard_raytrace(bodyObject.transform.FindChild(Kinect.JointType.ElbowLeft.ToString()),
+            bodyObject.transform.FindChild(Kinect.JointType.HandLeft.ToString()),
+            body.HandLeftState,
+            GameObject.Find("LeftHandDraw").GetComponent<LineRenderer>(),
+            "left");
+
+
     }
 	
 	private static Vector3 GetVector3FromJoint(Kinect.Joint joint) {
-		return new Vector3(joint.Position.X * 10, joint.Position.Y * 10, joint.Position.Z * 10);
+		return new Vector3(joint.Position.X * -10, joint.Position.Y * 10, joint.Position.Z * 10);
 	}
+
+
+
+    private void whiteboard_raytrace(Transform elbowObj, Transform handObj, Kinect.HandState handState, LineRenderer lr, string side)
+    {
+        RaycastHit hit;
+        Ray ray;
+
+        if (side == "right")
+        {
+            rightCorrectDrawVec = handObj.position - elbowObj.position;
+            rightDrawVec = Vector3.Lerp(rightDrawVec, rightCorrectDrawVec, Time.deltaTime * 5);
+            ray = new Ray(elbowObj.position, rightDrawVec);
+        }
+        else
+        {
+            leftCorrectDrawVec = handObj.position - elbowObj.position;
+            leftDrawVec = Vector3.Lerp(leftDrawVec, leftCorrectDrawVec, Time.deltaTime * 5);
+            ray = new Ray(elbowObj.position, leftDrawVec);
+        }
+        
+        
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.tag == "whiteboard")
+            {
+                Debug.Log("hit whiteboard");
+                drawRayLine(lr, ray.origin, hit.point);
+                if (handState == Kinect.HandState.Closed)
+                    drawWhiteboard(hit);
+            }
+            else if (hit.collider.tag == "markerRed")
+            {
+                Debug.Log("hit marker");
+                markerColor = Color.red;
+                markerRadius = 3;
+                drawRayLine(lr, ray.origin, hit.point);
+            }
+            else if (hit.collider.tag == "markerEraser")
+            {
+                Debug.Log("hit eraser");
+                markerColor = Color.white;
+                markerRadius = 6;
+                drawRayLine(lr, ray.origin, hit.point);
+            }
+            
+        }
+        else
+        {
+            //lr.enabled = false;
+        }
+    }
+
+    private void drawRayLine(LineRenderer lr, Vector3 pt1, Vector3 pt2)
+    {
+        lr.enabled = true;
+        lr.SetColors(markerColor, markerColor);
+        lr.SetPosition(0, pt1);
+        lr.SetPosition(1, pt2);
+        
+    }
+
+
+    private void drawWhiteboard(RaycastHit hit)
+    {
+        //Debug.DrawLine(ray.origin, hit.point);
+
+            Renderer rend = hit.transform.GetComponent<Renderer>();
+            MeshCollider meshCollider = hit.collider as MeshCollider;
+            Texture2D tex = rend.material.mainTexture as Texture2D;
+            Vector2 pixelUV = hit.textureCoord;
+            pixelUV.x *= tex.width;
+            pixelUV.y *= tex.height;
+            drawCircle(tex, (int)pixelUV.x, (int)pixelUV.y, markerRadius, markerColor);
+            tex.Apply();
+
+  
+    }
+
+    private void drawCircle(Texture2D tex, int cx, int cy, int r, Color col)
+    {
+        int x, y, px, nx, py, ny, d;
+
+        for (x = 0; x <= r; x++)
+        {
+            d = (int)Mathf.Ceil(Mathf.Sqrt(r * r - x * x));
+            for (y = 0; y <= d; y++)
+            {
+                px = cx + x;
+                nx = cx - x;
+                py = cy + y;
+                ny = cy - y;
+
+                tex.SetPixel(px, py, col);
+                tex.SetPixel(nx, py, col);
+
+                tex.SetPixel(px, ny, col);
+                tex.SetPixel(nx, ny, col);
+            }
+        }
+    }
+
+
 }

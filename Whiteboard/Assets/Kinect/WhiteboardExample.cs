@@ -5,7 +5,7 @@ public class WhiteboardExample : MonoBehaviour
 {
     void Start()
     {
-        Texture2D texture = new Texture2D(128, 128);
+        Texture2D texture = new Texture2D(800, 200);
 
         Color fillColor = Color.white;
         Color[] fillColorArray = texture.GetPixels();
