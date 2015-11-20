@@ -7,6 +7,7 @@ public class OSCReceiver : MonoBehaviour {
 	public int sendToPort = 8000;
 	public int listenerPort = 9000;
 	private Osc handler = null;
+	public static string[] hand_states;
 	public static float[] vars;
 	
 	void Start () {
@@ -23,11 +24,19 @@ public class OSCReceiver : MonoBehaviour {
 		if (running) return;
 		running = true;
 		string msg = Osc.OscMessageToString (oscMessage).Substring (1);
-
+		//Debug.Log (msg);
 		string[] _vals = msg.Split (' ');
-		vars = new float[_vals.Length];
-		for (int i = 0; i < vars.Length; i++)
+
+		hand_states = new string[2];
+		hand_states [0] = _vals [_vals.Length - 2];
+		hand_states [1] = _vals [_vals.Length - 1];
+
+		vars = new float[_vals.Length - 2];
+
+		for (int i = 0; i < _vals.Length - 2; i++) {
 			vars [i] = float.Parse (_vals [i]);
+		}
+
 		running = false;
 	}
 }
