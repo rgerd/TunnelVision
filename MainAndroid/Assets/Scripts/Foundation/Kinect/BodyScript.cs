@@ -86,6 +86,8 @@ public class BodyScript : MonoBehaviour {
 
 		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.position - joints [(int)JointType.SpineBase].transform.position;
 		lean = new Vector2 (lean3.x, lean3.z);
+
+		camHolder.transform.Rotate (Camera.main.transform.localRotation * -1);
 	}
 
 	void Update () {
@@ -102,14 +104,16 @@ public class BodyScript : MonoBehaviour {
 			float y = data[_i + 1]; 
 			float z = data[_i + 2];
 			Vector3 newPosition = new Vector3(x, y, z);
-			//if(newPosition.
+			newPosition.x = Mathf.Clamp(newPosition.x, westWall.transform.position.x, eastWall.transform.position.x);
+			newPosition.z = Mathf.Clamp(newPosition.x, southWall.transform.position.z, northWall.transform.position.z);
 
-			joint.transform.position = new Vector3(x, y, z);
+			joint.transform.position = Vector3.Lerp (joint.transform.position, new Vector3(x, y, z), Time.deltaTime * 10);
 		}
 
 		head.transform.localPosition = joints [0].transform.position;
 
-		transform.position.Set (transform.position.x, -joints [(int)JointType.AnkleLeft].transform.position.y, transform.position.z);
+		if(joints [(int)JointType.AnkleLeft].transform.position.y < 0)
+			transform.position.Set (transform.position.x, -joints [(int)JointType.AnkleLeft].transform.position.y, transform.position.z);
 
 		camHolder.transform.position = head.transform.position;
 
@@ -119,16 +123,15 @@ public class BodyScript : MonoBehaviour {
 		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.position - joints [(int)JointType.SpineBase].transform.position;
 		lean = new Vector2 (lean3.x, lean3.z) / bones[(int)BoneType.Core].transform.localScale.y;
 		Debug.Log (lean.magnitude);
-		if(Mathf.Abs (lean.y) > 0.5 || Mathf.Abs(lean.x) > 0.2) {
+		if(Mathf.Abs (lean.y) > 0.5 || Mathf.Abs(lean.x) > 0.2)
 				transform.Translate(lean.x * 10 * Time.deltaTime, 0, lean.y * 10 * Time.deltaTime);
-		}
 
 		if (Input.GetAxis ("Mouse X") < -0.75) {
 			rotationAcc = 90;
-			rotationDirection = 1;
+			rotationDirection = -1;
 		} else if (Input.GetAxis ("Mouse X") > 0.75) {
 			rotationAcc = 90;
-			rotationDirection = -1;
+			rotationDirection = 1;
 		}
 
 		if (rotationAcc > 0) {

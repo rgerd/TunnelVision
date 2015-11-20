@@ -26,6 +26,8 @@ public class OSCReceiver : MonoBehaviour {
 		string msg = Osc.OscMessageToString (oscMessage).Substring (1);
 		//Debug.Log (msg);
 		string[] _vals = msg.Split (' ');
+		if (_vals.Length == 0)
+			return;
 
 		hand_states = new string[2];
 		hand_states [0] = _vals [_vals.Length - 2];

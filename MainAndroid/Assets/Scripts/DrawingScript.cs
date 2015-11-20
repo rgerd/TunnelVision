@@ -11,7 +11,7 @@ public class DrawingScript : MonoBehaviour {
 	private Vector3 leftCorrectDrawVec;
 	private Vector3 leftDrawVec;
 
-	private Vector2 lastMark = new Vector2(-1, -1);
+	private Vector2? lastMark;
 
 	void Start () {}
 	
@@ -97,35 +97,30 @@ public class DrawingScript : MonoBehaviour {
 		pixelUV.x *= tex.width;
 		pixelUV.y *= tex.height;
 		Vector2 thisMark = new Vector2 (pixelUV.x, pixelUV.y);
-		if (lastMark == new Vector2(-1, -1))
+		if (lastMark == null)
 			lastMark = thisMark;
 			
-		drawCircle(tex, lastMark, thisMark, markerRadius, markerColor);
+		drawCircle(tex, (Vector2) lastMark, thisMark, markerRadius, markerColor);
 
 		lastMark = new Vector2 (pixelUV.x, pixelUV.y);
 		tex.Apply();
 	}
 	
-	private void drawCircle(Texture2D tex, Vector2 start, Vector2 end, int r, Color col)
-	{
-
+	private void drawCircle(Texture2D tex, Vector2 start, Vector2 end, int r, Color col) {
 		int dx = (int)(end.x - start.x);
 		int dy = (int)(end.y - start.y);
-		int d =  (int) Mathf.Sqrt (dx * dx + dy * dy);
+		int d  = (int) Mathf.Sqrt (dx * dx + dy * dy);
 
 		for (int i = 0; i < d; i++) {
 			float p = (float) i / (float) d;
 			int _x = (int) (start.x + dx * p);
 			int _y = (int) (start.y + dy * p);
-			tex.SetPixel(_x, _y, col);
-			tex.SetPixel(_x + 1, _y + 1, col);
-			tex.SetPixel(_x + 1, _y - 1, col);
-			tex.SetPixel(_x - 1, _y + 1, col);
-			tex.SetPixel(_x - 1, _y - 1, col);
-			tex.SetPixel(_x, _y + 1, col);
-			tex.SetPixel(_x, _y - 1, col);
-			tex.SetPixel(_x + 1, _y, col);
-			tex.SetPixel(_x - 1, _y, col);
+
+			for(int j = -r; j < r; j++) {
+				for(int k = -r; k < r; k++) {
+					tex.SetPixel(_x + j, _y + k, col);
+				}
+			}
 		}
 
 	}
