@@ -8,6 +8,7 @@ public class DrawingScript : MonoBehaviour {
 	private Vector3 rightDrawVec;
 	private Vector3 leftCorrectDrawVec;
 	private Vector3 leftDrawVec;
+	private Vector2 lastMark;
 
 	void Start () {}
 	
@@ -32,13 +33,13 @@ public class DrawingScript : MonoBehaviour {
 		if (side == "right")
 		{
 			rightCorrectDrawVec = handObj.position - elbowObj.position;
-			rightDrawVec = Vector3.Lerp(rightDrawVec, rightCorrectDrawVec, Time.deltaTime * 5);
+			rightDrawVec = rightCorrectDrawVec;//Vector3.Lerp(rightDrawVec, rightCorrectDrawVec, Time.deltaTime * 2);
 			ray = new Ray(elbowObj.position, rightDrawVec);
 		}
 		else
 		{
 			leftCorrectDrawVec = handObj.position - elbowObj.position;
-			leftDrawVec = Vector3.Lerp(leftDrawVec, leftCorrectDrawVec, Time.deltaTime * 5);
+			leftDrawVec = leftCorrectDrawVec;//Vector3.Lerp(leftDrawVec, leftCorrectDrawVec, Time.deltaTime * 2);
 			ray = new Ray(elbowObj.position, leftDrawVec);
 		}
 		
@@ -95,15 +96,19 @@ public class DrawingScript : MonoBehaviour {
 		Debug.Log (pixelUV.x + ", " + pixelUV.y);
 		pixelUV.x *= tex.width;
 		pixelUV.y *= tex.height;
-		drawCircle(tex, (int)pixelUV.x, (int)pixelUV.y, markerRadius, markerColor);
+
+		for (float i = 0; i <= 1f; i += 0.5f) {
+			Vector2 l = Vector2.Lerp (lastMark, new Vector2(pixelUV.x, pixelUV.y), i);
+			drawCircle(tex, (int) l.x, (int) l.y, markerRadius, markerColor);
+		}
+
+		lastMark = new Vector2 (pixelUV.x, pixelUV.y);
 		tex.Apply();
-		
-		
 	}
 	
 	private void drawCircle(Texture2D tex, int cx, int cy, int r, Color col)
 	{
-		Debug.Log ("C: " + cx + ", " + cy);
+
 		int x, y, px, nx, py, ny, d;
 		
 		for (x = 0; x <= r; x++)
@@ -123,5 +128,7 @@ public class DrawingScript : MonoBehaviour {
 				tex.SetPixel(nx, ny, col);
 			}
 		}
+
+
 	}
 }

@@ -36,6 +36,11 @@ public class BodyScript : MonoBehaviour {
 		LeftLegBottom
 	}
 
+	public GameObject northWall;
+	public GameObject southWall;
+	public GameObject eastWall;
+	public GameObject westWall;
+
 	public GameObject head_prefab;
 	public GameObject bone_prefab;
 
@@ -44,6 +49,8 @@ public class BodyScript : MonoBehaviour {
 	public static GameObject[] joints;
 	public static string handLeftState;
 	public static string handRightState;
+
+	private Vector2 lean;
 
 	void Start () {
 		joints = new GameObject[15];
@@ -72,6 +79,9 @@ public class BodyScript : MonoBehaviour {
 
 		bones[(int)BoneType.RightLegTop] = addBone("RightLegTop", 0.8f, bone_prefab, JointType.HipRight, JointType.KneeRight);
 		bones[(int)BoneType.RightLegBottom] = addBone("RightLegBottom", 0.5f, bone_prefab, JointType.KneeRight, JointType.AnkleRight);
+
+		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.position - joints [(int)JointType.SpineBase].transform.position;
+		lean = new Vector2 (lean3.x, lean3.z);
 	}
 
 	void Update () {
@@ -87,6 +97,9 @@ public class BodyScript : MonoBehaviour {
 			float x = data[_i]; 
 			float y = data[_i + 1]; 
 			float z = data[_i + 2];
+			Vector3 newPosition = new Vector3(x, y, z);
+			//if(newPosition.
+
 			joint.transform.position = new Vector3(x, y, z);
 		}
 
@@ -98,6 +111,13 @@ public class BodyScript : MonoBehaviour {
 
 		handLeftState = OSCReceiver.hand_states [0];
 		handRightState = OSCReceiver.hand_states [1];
+
+		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.position - joints [(int)JointType.SpineBase].transform.position;
+		lean = new Vector2 (lean3.x, lean3.z) / bones[(int)BoneType.Core].transform.localScale.y;
+		Debug.Log (lean.magnitude);
+		if(Mathf.Abs (lean.y) > 0.5 || Mathf.Abs(lean.x) > 0.2) {
+				transform.Translate(lean.x * 10 * Time.deltaTime, 0, lean.y * 10 * Time.deltaTime);
+		}
 	}
 
 	private GameObject addBone(string name, float radius, GameObject prefab, JointType joint1, JointType joint2) {
