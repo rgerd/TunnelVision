@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Wall
   - whiteboard
+  - clickable
+  - draggable
   layers:
   - Default
   - TransparentFX

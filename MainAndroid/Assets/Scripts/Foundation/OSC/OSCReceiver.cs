@@ -24,16 +24,19 @@ public class OSCReceiver : MonoBehaviour {
 		if (running) return;
 		running = true;
 		string msg = Osc.OscMessageToString (oscMessage).Substring (1);
-
+		//Debug.Log (msg);
 		string[] _vals = msg.Split (' ');
 
 		hand_states = new string[2];
-		hand_states [0] = _vals [0];
-		hand_states [1] = _vals [1];
+		hand_states [0] = _vals [_vals.Length - 2];
+		hand_states [1] = _vals [_vals.Length - 1];
 
 		vars = new float[_vals.Length - 2];
-		for (int i = 2; i < _vals.Length; i++)
-			vars [i - 2] = float.Parse (_vals [i]);
+
+		for (int i = 0; i < _vals.Length - 2; i++) {
+			vars [i] = float.Parse (_vals [i]);
+		}
+
 		running = false;
 	}
 }

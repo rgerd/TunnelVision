@@ -7,7 +7,7 @@ public class BoneScript : MonoBehaviour {
 	public float radius = 1;
 	void Update () {
 		Vector3 midpoint = (joint1.transform.position + joint2.transform.position) / 2;
-		transform.position = midpoint;
+		transform.localPosition = midpoint;
 		float dist = Vector3.Distance (joint1.transform.position, joint2.transform.position) / 2;
 		if (dist == 0)
 			return;
