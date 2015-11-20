@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DrawingScript : MonoBehaviour {
+public class DrawingScript : Photon.MonoBehaviour {
 	private int markerRadius = 5;
 	private Color markerColor;
 
@@ -23,8 +23,6 @@ public class DrawingScript : MonoBehaviour {
 		Vector3 rightCorrectDrawVec = BodyScript.joints [(int)BodyScript.JointType.WristRight].transform.position - BodyScript.joints [(int)BodyScript.JointType.ElbowRight].transform.position;
 		Vector3 leftCorrectDrawVec  = BodyScript.joints [(int)BodyScript.JointType.WristLeft].transform.position  - BodyScript.joints [(int)BodyScript.JointType.ElbowLeft].transform.position;
 
-		Debug.Log (BodyScript.handLeftState + ",  " + BodyScript.handRightState);
-
 
 		if (BodyScript.handLeftState == "Closed" || BodyScript.handLeftState == "Open")
 			lastLeftState = BodyScript.handLeftState;
@@ -37,6 +35,7 @@ public class DrawingScript : MonoBehaviour {
 		} else {
 			leftDrawVec = leftCorrectDrawVec;
 			lastMarkLeft = null;
+			GameObject.Find ("LeftHandDraw").GetComponent<LineRenderer> ().enabled = false;
 		}
 
 		if (lastRightState == "Closed") {
@@ -45,44 +44,34 @@ public class DrawingScript : MonoBehaviour {
 		} else {
 			rightDrawVec = rightCorrectDrawVec;
 			lastMarkRight = null;
+			GameObject.Find ("RightHandDraw").GetComponent<LineRenderer> ().enabled = false;
 		}
 
 	}
 
-	private void whiteboard_raytrace(Vector3 drawVec, Transform elbow, LineRenderer lr, string side)
-	{
+	private void whiteboard_raytrace(Vector3 drawVec, Transform elbow, LineRenderer lr, string side) {
 		RaycastHit hit;
 		Ray ray = new Ray(elbow.position, drawVec);
 		
-		if (Physics.Raycast(ray, out hit))
-		{
+		if (Physics.Raycast(ray, out hit)) {
 
-			if (hit.collider.tag == "whiteboard")
-			{
+			if (hit.collider.tag == "whiteboard") {
 				markerColor = Color.red;
-				//drawRayLine(lr, ray.origin, hit.point);
+				drawRayLine(lr, ray.origin, hit.point);
 				drawWhiteboard(hit, side);
-			}
-			else if (hit.collider.tag == "markerRed")
-			{
+			} else if (hit.collider.tag == "markerRed") {
 				Debug.Log("hit marker");
 				markerColor = Color.red;
 				markerRadius = 3;
-				//drawRayLine(lr, ray.origin, hit.point);
-			}
-			else if (hit.collider.tag == "markerEraser")
-			{
+				drawRayLine(lr, ray.origin, hit.point);
+			} else if (hit.collider.tag == "markerEraser") {
 				Debug.Log("hit eraser");
 				markerColor = Color.white;
 				markerRadius = 6;
-				//drawRayLine(lr, ray.origin, hit.point);
+				drawRayLine(lr, ray.origin, hit.point);
 			}
-
-			
-		}
-		else
-		{
-			//lr.enabled = false;
+		} else {
+			lr.enabled = false;
 		}
 	}
 	
@@ -114,7 +103,9 @@ public class DrawingScript : MonoBehaviour {
 				lastMarkRight = thisMark;
 		}
 
-		drawCircle(tex, (Vector2) (side == "left" ? lastMarkLeft : lastMarkRight), thisMark, markerRadius, markerColor);
+		Vector2 lastMark = (Vector2)(side == "left" ? lastMarkLeft : lastMarkRight);
+		//drawCircle(tex, (Vector2) (side == "left" ? lastMarkLeft : lastMarkRight), thisMark, markerRadius, markerColor);
+		this.photonView.RPC("ChatMessage", PhotonTargets.All, hit.transform.name, ((int)lastMark.x).ToString (), ((int)lastMark.y).ToString (), ((int)pixelUV.x).ToString(), ((int)pixelUV.y).ToString(), markerRadius.ToString(), markerColor.ToString());
 
 		if (side == "left") {
 			lastMarkLeft = new Vector2 (pixelUV.x, pixelUV.y);
@@ -123,7 +114,16 @@ public class DrawingScript : MonoBehaviour {
 		}
 		tex.Apply();
 	}
-	
+
+
+	[PunRPC]
+	void ChatMessage(string name, string x1, string y1, string x2, string y2, string markerRadius, string markerColor)
+	{
+		//Debug.Log("ChatMessage " + name + " " + x + " " + y + " " + markerRadius + " " + markerColor);
+		Texture2D tex = GameObject.Find(name).transform.GetComponent<Renderer>().material.mainTexture as Texture2D;
+		drawCircle(tex, new Vector2(int.Parse(x1), int.Parse(y1)), new Vector2(int.Parse(x2), int.Parse(y2)), int.Parse(markerRadius), Color.red);
+	}
+
 	private void drawCircle(Texture2D tex, Vector2 start, Vector2 end, int r, Color col) {
 		int dx = (int)(end.x - start.x);
 		int dy = (int)(end.y - start.y);
