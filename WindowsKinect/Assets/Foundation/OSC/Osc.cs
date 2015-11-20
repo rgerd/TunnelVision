@@ -16,52 +16,17 @@ public delegate void OscMessageHandler( OscMessage oscM );
 
 public class Osc : MonoBehaviour {
 	private UDPPacketIO OscPacketIO;
-	Thread ReadThread;
-	private bool ReaderRunning;
-	private OscMessageHandler AllMessageHandler;
-	Hashtable AddressTable;
-
 	void Start() {}
 
 	public void init(UDPPacketIO oscPacketIO){
 		OscPacketIO = oscPacketIO;
-		AddressTable = new Hashtable();
-		ReadThread = new Thread(Read);
-		ReaderRunning = true;
-		ReadThread.IsBackground = true;
-		ReadThread.Start();
 	}
-
-	~Osc() { if (ReaderRunning) Cancel(); }
 	
 	public void Cancel() {
-		if (ReaderRunning) {
-			ReaderRunning = false;
-			ReadThread.Abort();
-		}
 		if (OscPacketIO != null && OscPacketIO.IsOpen()) {
 			OscPacketIO.Close();
 			OscPacketIO = null;
 		}
-	}
-
-	private void Read() {
-		try {
-			while (ReaderRunning) {
-				byte[] buffer = new byte[1000];
-				int length = OscPacketIO.ReceivePacket(buffer);
-				if (length > 0) {
-					ArrayList messages = Osc.PacketToOscMessages(buffer, length);
-					foreach (OscMessage om in messages) {
-						if (AllMessageHandler != null) AllMessageHandler(om);
-						OscMessageHandler h = (OscMessageHandler)Hashtable.Synchronized(AddressTable)[om.Address];
-						if (h != null) h(om);
-					}
-				} else Thread.Sleep(20);
-			}
-		}
-		catch (Exception e) {}
-		finally {}
 	}
 
 	public void Send( OscMessage oscMessage ) {
@@ -74,14 +39,6 @@ public class Osc : MonoBehaviour {
 		byte[] packet = new byte[1000];
 		int length = Osc.OscMessagesToPacket(oms, packet, 1000);
 		OscPacketIO.SendPacket(packet, length);
-	}
-
-	public void SetAllMessageHandler(OscMessageHandler amh) {
-		AllMessageHandler = amh;
-	}
-
-	public void SetAddressHandler(string key, OscMessageHandler ah) {
-		Hashtable.Synchronized(AddressTable).Add(key, ah);
 	}
 
 	public static string OscMessageToString(OscMessage message)
