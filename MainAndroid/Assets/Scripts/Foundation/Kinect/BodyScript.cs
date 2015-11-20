@@ -87,7 +87,7 @@ public class BodyScript : MonoBehaviour {
 		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.position - joints [(int)JointType.SpineBase].transform.position;
 		lean = new Vector2 (lean3.x, lean3.z);
 
-		camHolder.transform.Rotate (Camera.main.transform.localRotation * -1);
+		camHolder.transform.Rotate (Camera.main.transform.localRotation.eulerAngles * -1);
 	}
 
 	void Update () {
