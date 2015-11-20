@@ -15,13 +15,16 @@ public class OSCReceiver : MonoBehaviour {
 		handler = (Osc) GetComponent ("Osc");
 		handler.init(udp);
 		handler.SetAllMessageHandler(AllMessageHandler);
+		Debug.Log (remoteIP + " " + sendToPort + " " + listenerPort);
 	}
 	
 	public void AllMessageHandler(OscMessage oscMessage) {
+		Debug.Log ("MOOOOOO");
 		string msg = Osc.OscMessageToString (oscMessage).Substring (1);
+		Debug.Log (msg);
 		string[] _vals = msg.Split (' ');
-		float[] vals = new float[_vals.Length];
-		for (int i = 0; i < vals.Length; i++)
-			vals[i] = float.Parse(_vals[i]);
+		vars = new float[_vals.Length];
+		for (int i = 0; i < vars.Length; i++)
+			vars[i] = float.Parse(_vals[i]);
 	}
 }
