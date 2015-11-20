@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whiteboard.CSharp", "Whiteb
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whiteboard.CSharp.Editor.Plugins", "Whiteboard.CSharp.Editor.Plugins.csproj", "{52991DF7-8257-ECCA-EE76-454FE2F04D9B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Whiteboard.CSharp.Editor", "Whiteboard.CSharp.Editor.csproj", "{367E2C8C-E0E1-124A-A917-7B07AD26F39F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{52991DF7-8257-ECCA-EE76-454FE2F04D9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52991DF7-8257-ECCA-EE76-454FE2F04D9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52991DF7-8257-ECCA-EE76-454FE2F04D9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{367E2C8C-E0E1-124A-A917-7B07AD26F39F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{367E2C8C-E0E1-124A-A917-7B07AD26F39F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{367E2C8C-E0E1-124A-A917-7B07AD26F39F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{367E2C8C-E0E1-124A-A917-7B07AD26F39F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

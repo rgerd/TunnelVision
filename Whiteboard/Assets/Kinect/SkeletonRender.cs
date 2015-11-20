@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Kinect = Windows.Kinect;
 
-public class SkeletonRender : MonoBehaviour {
+public class SkeletonRender : Photon.MonoBehaviour {
 	//public GameObject BodySourceManager;
 	public GameObject bone_prefab;
 	
@@ -200,21 +200,21 @@ public class SkeletonRender : MonoBehaviour {
         {
             if (hit.collider.tag == "whiteboard")
             {
-                Debug.Log("hit whiteboard");
+                //Debug.Log("hit whiteboard");
                 drawRayLine(lr, ray.origin, hit.point);
                 if (handState == Kinect.HandState.Closed)
                     drawWhiteboard(hit);
             }
             else if (hit.collider.tag == "markerRed")
             {
-                Debug.Log("hit marker");
+                //Debug.Log("hit marker");
                 markerColor = Color.red;
                 markerRadius = 3;
                 drawRayLine(lr, ray.origin, hit.point);
             }
             else if (hit.collider.tag == "markerEraser")
             {
-                Debug.Log("hit eraser");
+                //Debug.Log("hit eraser");
                 markerColor = Color.white;
                 markerRadius = 6;
                 drawRayLine(lr, ray.origin, hit.point);
@@ -247,11 +247,19 @@ public class SkeletonRender : MonoBehaviour {
             Vector2 pixelUV = hit.textureCoord;
             pixelUV.x *= tex.width;
             pixelUV.y *= tex.height;
-            drawCircle(tex, (int)pixelUV.x, (int)pixelUV.y, markerRadius, markerColor);
-            tex.Apply();
-
-  
+        this.photonView.RPC("ChatMessage", PhotonTargets.All, hit.transform.name, ((int)pixelUV.x).ToString(), ((int)pixelUV.y).ToString(), markerRadius.ToString(), markerColor.ToString());
+            //drawCircle(tex, (int)pixelUV.x, (int)pixelUV.y, markerRadius, markerColor);  
     }
+
+
+    [PunRPC]
+    void ChatMessage(string name, string x, string y, string markerRadius, string markerColor)
+    {
+        //Debug.Log("ChatMessage " + name + " " + x + " " + y + " " + markerRadius + " " + markerColor);
+        Texture2D tex = GameObject.Find(name).transform.GetComponent<Renderer>().material.mainTexture as Texture2D;
+        drawCircle(tex, int.Parse(x), int.Parse(y), int.Parse(markerRadius), Color.red);
+    }
+
 
     private void drawCircle(Texture2D tex, int cx, int cy, int r, Color col)
     {
@@ -274,6 +282,7 @@ public class SkeletonRender : MonoBehaviour {
                 tex.SetPixel(nx, ny, col);
             }
         }
+        tex.Apply();
     }
 
 
