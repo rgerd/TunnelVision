@@ -17,14 +17,17 @@ public class OSCReceiver : MonoBehaviour {
 		handler.SetAllMessageHandler(AllMessageHandler);
 		Debug.Log (remoteIP + " " + sendToPort + " " + listenerPort);
 	}
-	
+
+	private bool running = false;
 	public void AllMessageHandler(OscMessage oscMessage) {
-		Debug.Log ("MOOOOOO");
+		if (running) return;
+		running = true;
 		string msg = Osc.OscMessageToString (oscMessage).Substring (1);
-		Debug.Log (msg);
+
 		string[] _vals = msg.Split (' ');
 		vars = new float[_vals.Length];
 		for (int i = 0; i < vars.Length; i++)
-			vars[i] = float.Parse(_vals[i]);
+			vars [i] = float.Parse (_vals [i]);
+		running = false;
 	}
 }

@@ -73,11 +73,16 @@ public class BodyScript : MonoBehaviour {
 		float[] data = OSCReceiver.vars;
 		if (data == null)
 			return;
-		for(int i = 0; i < data.Length; i++) {
-			GameObject joint = joints[i / 3];
-			float x = data[i]; float y = data[++i]; float z = data[++i];
+		int numJoints = data.Length / 3;
+		head.transform.position = new Vector3 (data [0], data [1], data [2]);
+		for(int i = 1; i < numJoints; i++) {
+			int _i = i * 3;
+			GameObject joint = joints[i - 1];
+			float x = data[_i]; float y = data[_i + 1]; float z = data[_i + 2];
 			joint.transform.position = new Vector3(x, y, z);
 		}
+
+		//Camera.main.transform.position = head.transform.position;
 	}
 
 	private GameObject addBone(string name, float radius, GameObject prefab, JointType joint1, JointType joint2) {
