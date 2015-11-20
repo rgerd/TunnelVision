@@ -112,12 +112,14 @@ public class BodyScript : MonoBehaviour {
 		handLeftState = OSCReceiver.hand_states [0];
 		handRightState = OSCReceiver.hand_states [1];
 
-		Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.position - joints [(int)JointType.SpineBase].transform.position;
+		/*Vector3 lean3 = joints [(int)JointType.SpineShoulder].transform.position - joints [(int)JointType.SpineBase].transform.position;
 		lean = new Vector2 (lean3.x, lean3.z) / bones[(int)BoneType.Core].transform.localScale.y;
 		Debug.Log (lean.magnitude);
 		if(Mathf.Abs (lean.y) > 0.5 || Mathf.Abs(lean.x) > 0.2) {
 				transform.Translate(lean.x * 10 * Time.deltaTime, 0, lean.y * 10 * Time.deltaTime);
-		}
+		}*/
+
+		transform.Translate(Input.GetAxis("Mouse X") * 10 * Time.deltaTime, 0, Input.GetAxis("Mouse Y") * 10 * Time.deltaTime);
 	}
 
 	private GameObject addBone(string name, float radius, GameObject prefab, JointType joint1, JointType joint2) {
