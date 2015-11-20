@@ -7,9 +7,11 @@ public class DrawingScript : MonoBehaviour {
 
 	private Vector3 rightCorrectDrawVec;
 	private Vector3 rightDrawVec;
+	private string lastRightState;
 
 	private Vector3 leftCorrectDrawVec;
 	private Vector3 leftDrawVec;
+	private string lastLeftState;
 
 	private Vector2? lastMarkLeft;
 	private Vector2? lastMarkRight;
@@ -21,21 +23,30 @@ public class DrawingScript : MonoBehaviour {
 		Vector3 rightCorrectDrawVec = BodyScript.joints [(int)BodyScript.JointType.WristRight].transform.position - BodyScript.joints [(int)BodyScript.JointType.ElbowRight].transform.position;
 		Vector3 leftCorrectDrawVec  = BodyScript.joints [(int)BodyScript.JointType.WristLeft].transform.position  - BodyScript.joints [(int)BodyScript.JointType.ElbowLeft].transform.position;
 
-		if (BodyScript.handLeftState == "Closed") {
-			leftDrawVec = Vector3.Lerp (leftDrawVec, leftCorrectDrawVec, Time.deltaTime * 5);
-			whiteboard_raytrace (leftDrawVec, GameObject.Find ("LeftHandDraw").GetComponent<LineRenderer> (), "left");
+		Debug.Log (BodyScript.handLeftState + ",  " + BodyScript.handRightState);
+
+
+		if (BodyScript.handLeftState == "Closed" || BodyScript.handLeftState == "Open")
+			lastLeftState = BodyScript.handLeftState;
+		if (BodyScript.handRightState == "Closed" || BodyScript.handRightState == "Open")
+			lastRightState = BodyScript.handRightState;
+
+		if (lastLeftState == "Closed") {
+			leftDrawVec = Vector3.Lerp (leftDrawVec, leftCorrectDrawVec, Time.deltaTime * 2);
+			whiteboard_raytrace (leftDrawVec, BodyScript.joints [(int)BodyScript.JointType.WristLeft].transform, GameObject.Find ("LeftHandDraw").GetComponent<LineRenderer> (), "left");
 		} else {
 			leftDrawVec = leftCorrectDrawVec;
 			lastMarkLeft = null;
 		}
 
-		if (BodyScript.handRightState == "Closed") {
-			rightDrawVec = Vector3.Lerp (rightDrawVec, rightCorrectDrawVec, Time.deltaTime * 5);
-			whiteboard_raytrace (rightDrawVec, GameObject.Find ("RightHandDraw").GetComponent<LineRenderer> (), "right");
+		if (lastRightState == "Closed") {
+			rightDrawVec = Vector3.Lerp (rightDrawVec, rightCorrectDrawVec, Time.deltaTime * 2);
+			whiteboard_raytrace (rightDrawVec, BodyScript.joints [(int)BodyScript.JointType.WristRight].transform, GameObject.Find ("RightHandDraw").GetComponent<LineRenderer> (), "right");
 		} else {
 			rightDrawVec = rightCorrectDrawVec;
 			lastMarkRight = null;
 		}
+
 	}
 
 	private void whiteboard_raytrace(Vector3 drawVec, Transform elbow, LineRenderer lr, string side)
@@ -45,10 +56,11 @@ public class DrawingScript : MonoBehaviour {
 		
 		if (Physics.Raycast(ray, out hit))
 		{
+
 			if (hit.collider.tag == "whiteboard")
 			{
 				markerColor = Color.red;
-				drawRayLine(lr, ray.origin, hit.point);
+				//drawRayLine(lr, ray.origin, hit.point);
 				drawWhiteboard(hit, side);
 			}
 			else if (hit.collider.tag == "markerRed")
@@ -56,15 +68,16 @@ public class DrawingScript : MonoBehaviour {
 				Debug.Log("hit marker");
 				markerColor = Color.red;
 				markerRadius = 3;
-				drawRayLine(lr, ray.origin, hit.point);
+				//drawRayLine(lr, ray.origin, hit.point);
 			}
 			else if (hit.collider.tag == "markerEraser")
 			{
 				Debug.Log("hit eraser");
 				markerColor = Color.white;
 				markerRadius = 6;
-				drawRayLine(lr, ray.origin, hit.point);
+				//drawRayLine(lr, ray.origin, hit.point);
 			}
+
 			
 		}
 		else
@@ -91,6 +104,8 @@ public class DrawingScript : MonoBehaviour {
 		pixelUV.x *= tex.width;
 		pixelUV.y *= tex.height;
 		Vector2 thisMark = new Vector2 (pixelUV.x, pixelUV.y);
+		if (thisMark.x == 0 && thisMark.y == 0)
+			return;
 		if (side == "left") {
 			if(lastMarkLeft == null)
 				lastMarkLeft = thisMark;

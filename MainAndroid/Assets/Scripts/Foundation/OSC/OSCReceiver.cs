@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class OSCReceiver : MonoBehaviour {
 	public string remoteIP = "127.0.0.1";
-	public int sendToPort = 8000;
 	public int listenerPort = 9000;
 	private Osc handler = null;
 	public static string[] hand_states;
@@ -12,11 +11,11 @@ public class OSCReceiver : MonoBehaviour {
 	
 	void Start () {
 		UDPPacketIO udp = (UDPPacketIO) GetComponent ("UDPPacketIO");
-		udp.init (remoteIP, sendToPort, listenerPort);
+		udp.init (remoteIP, listenerPort);
 		handler = (Osc) GetComponent ("Osc");
 		handler.init(udp);
 		handler.SetAllMessageHandler(AllMessageHandler);
-		Debug.Log (remoteIP + " " + sendToPort + " " + listenerPort);
+		Debug.Log (remoteIP + " " + listenerPort);
 	}
 
 	private bool running = false;

@@ -10,11 +10,9 @@ using UnityEngine;
 // UdpPacket provides packetIO over UDP
 public class UDPPacketIO : MonoBehaviour
 {
-	private UdpClient Sender;
 	private UdpClient Receiver;
 	private bool socketsOpen;
 	private string remoteHostName;
-	private int remotePort;
 	private int localPort;
 	
 	void Start()
@@ -22,9 +20,8 @@ public class UDPPacketIO : MonoBehaviour
 		//do nothing. init must be called
 	}
 	
-	public void init(string hostIP, int remotePort, int localPort){
+	public void init(string hostIP, int localPort){
 		RemoteHostName = hostIP;
-		RemotePort = remotePort;
 		LocalPort = localPort;
 		socketsOpen = false;
 	}
@@ -45,9 +42,6 @@ public class UDPPacketIO : MonoBehaviour
 	{
 		try
 		{
-			Sender = new UdpClient();
-			//Debug.Log("opening udpclient listener on port " + localPort);
-			
 			IPEndPoint listenerIp = new IPEndPoint(IPAddress.Any, localPort);
 			Receiver = new UdpClient(listenerIp);
 			socketsOpen = true;
@@ -65,10 +59,7 @@ public class UDPPacketIO : MonoBehaviour
 	
 	// Close the socket currently listening, and destroy the UDP sender device.
 	public void Close()
-	{
-		if(Sender != null)
-			Sender.Close();
-		
+	{	
 		if (Receiver != null)
 		{
 			Receiver.Close();
@@ -90,21 +81,6 @@ public class UDPPacketIO : MonoBehaviour
 	{
 		return socketsOpen;
 	}
-	
-	// Send a packet of bytes out via UDP.
-	// packet - The packet of bytes to be sent.
-	// length - The length of the packet of bytes to be sent.
-	public void SendPacket(byte[] packet, int length)
-	{
-		if (!IsOpen())
-			Open();
-		if (!IsOpen())
-			return;
-		
-		Sender.Send(packet, length, remoteHostName, remotePort);
-		//Debug.Log("osc message sent to "+remoteHostName+" port "+remotePort+" len="+length);
-	}
-	
 	
 	// Receive a packet of bytes over UDP.
 	
@@ -134,19 +110,6 @@ public class UDPPacketIO : MonoBehaviour
 		set
 		{
 			remoteHostName = value;
-		}
-	}
-	
-	// The remote port that you're sending to.
-	public int RemotePort
-	{
-		get
-		{
-			return remotePort;
-		}
-		set
-		{
-			remotePort = value;
 		}
 	}
 	

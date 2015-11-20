@@ -104,6 +104,8 @@ public class BodyScript : MonoBehaviour {
 			float x = data[_i]; 
 			float y = data[_i + 1]; 
 			float z = data[_i + 2];
+			if(x == 0 && y == 0 && z == 0)
+				continue;
 			//Vector3 newPosition = new Vector3(x, y, z);
 			//newPosition.x = Mathf.Clamp(newPosition.x, westWall.transform.position.x, eastWall.transform.position.x);
 			//newPosition.z = Mathf.Clamp(newPosition.x, southWall.transform.position.z, northWall.transform.position.z);
@@ -124,12 +126,18 @@ public class BodyScript : MonoBehaviour {
 
 
 		calcLean ();
-		if ((lean - normalLean).magnitude > 0.2) {
-			transform.Translate ((lean.x - normalLean.x) * 10 * Time.deltaTime, 0, (lean.y - normalLean.y) * 10 * Time.deltaTime);
-		} else {
-			normalLean = (lean + normalLean) / 2;
+		if (lean.y < -0.3) {
+			transform.Translate (0, 0, lean.y * 10 * Time.deltaTime);
+		} else if (lean.y > 0.3) {
+			transform.Translate (0, 0, lean.y * 10 * Time.deltaTime);
 		}
-			
+
+		if (lean.x < -0.2) {
+			transform.Translate (lean.x * 15 * Time.deltaTime, 0, 0);
+		} else if (lean.x > 0.2) {
+			transform.Translate (lean.x * 15 * Time.deltaTime, 0, 0);
+		}
+			/*
 		if (Input.GetAxis ("Mouse X") < -0.75) {
 			rotationAcc = 90;
 			rotationDirection = -1;
@@ -149,7 +157,7 @@ public class BodyScript : MonoBehaviour {
 			transform.Rotate (0, rotationDirection * rotationAcc * Time.deltaTime, 0);
 			rotationAcc = 0;
 			rotationDirection = 0;
-		}
+		}*/
 	}
 
 	private GameObject addBone(string name, float radius, GameObject prefab, JointType joint1, JointType joint2) {

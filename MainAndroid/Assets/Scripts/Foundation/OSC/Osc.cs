@@ -112,30 +112,7 @@ public class Osc : MonoBehaviour
 		}
 		
 	}
-	
-	
-	// Send an individual OSC message.  Internally takes the OscMessage object and
-	// serializes it into a byte[] suitable for sending to the PacketIO.
-	public void Send( OscMessage oscMessage )
-	{
-		byte[] packet = new byte[1000];
-		int length = Osc.OscMessageToPacket( oscMessage, packet, 1000 );
-		OscPacketIO.SendPacket( packet, length);
-	}
-	
-	
-	// Sends a list of OSC Messages.  Internally takes the OscMessage objects and
-	// serializes them into a byte[] suitable for sending to the PacketExchange.
-	
-	//oms - The OSC Message to send.
-	public void Send(ArrayList oms)
-	{
-		byte[] packet = new byte[1000];
-		int length = Osc.OscMessagesToPacket(oms, packet, 1000);
-		OscPacketIO.SendPacket(packet, length);
-	}
-	
-	
+
 	// Set the method to call back on when any message is received.
 	// The method needs to have the OscMessageHandler signature - i.e. void amh( OscMessage oscM )
 	
