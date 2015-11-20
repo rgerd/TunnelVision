@@ -42,7 +42,7 @@ public class WhiteboardExample : MonoBehaviour
         }
     }
 
-    void draw(Ray ray, RaycastHit hit, Color color, int radius)
+    public void draw(Ray ray, RaycastHit hit, Color color, int radius)
     {
         Debug.DrawLine(ray.origin, hit.point);
 

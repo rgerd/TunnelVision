@@ -141,8 +141,41 @@ public class SkeletonRender : MonoBehaviour {
                 Camera.main.transform.Rotate(new Vector3(0, 180, 0));
                 Camera.main.transform.position = (Vector3)jointObj.transform.position;
             }
+
+            if (jt == Kinect.JointType.HandRight)
+            {
+                //Debug.Log((Vector3)jointObj.transform.position);
+            }
 		}
-	}
+
+        Debug.Log(body.HandRightState);
+        if (body.HandRightState == Kinect.HandState.Lasso)
+        {
+            RaycastHit hit;
+            Transform elbowRightObj = bodyObject.transform.FindChild(Kinect.JointType.ElbowRight.ToString());
+            Transform handRightObj = bodyObject.transform.FindChild(Kinect.JointType.ElbowRight.ToString());
+            Ray ray = new Ray(elbowRightObj.position, handRightObj.position - elbowRightObj.position);
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.collider.tag == "whiteboard")
+                {
+                    Debug.Log("drawing on whiteboard");
+                    Debug.DrawLine(ray.origin, hit.point);
+
+                    Renderer rend = hit.transform.GetComponent<Renderer>();
+                    MeshCollider meshCollider = hit.collider as MeshCollider;
+                    Texture2D tex = rend.material.mainTexture as Texture2D;
+                    Vector2 pixelUV = hit.textureCoord;
+                    pixelUV.x *= tex.width;
+                    pixelUV.y *= tex.height;
+                    tex.SetPixel((int)pixelUV.x, (int)pixelUV.y, Color.red);
+                    //drawCircle(tex, (int)pixelUV.x, (int)pixelUV.y, radius, color);
+                    tex.Apply();
+                }
+                //WhiteboardExample.draw(ray, hit, Color.red, 2);
+            }
+        }
+    }
 	
 	private static Vector3 GetVector3FromJoint(Kinect.Joint joint) {
 		return new Vector3(joint.Position.X * 10, joint.Position.Y * 10, joint.Position.Z * 10);
