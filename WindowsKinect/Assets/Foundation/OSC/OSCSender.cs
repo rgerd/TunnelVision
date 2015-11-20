@@ -10,6 +10,7 @@ public class OSCSender : MonoBehaviour {
 	private SkeletonRender skeletonrender;
 	
 	void Start() {
+		Debug.Log(remoteIp);
 		UDPPacketIO udp = (UDPPacketIO) GetComponent("UDPPacketIO");
 		udp.init(remoteIp, sendToPort, listenerPort);
 		handler = (Osc) GetComponent("Osc");

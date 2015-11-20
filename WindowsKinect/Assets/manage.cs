@@ -18,7 +18,8 @@ public class manage : MonoBehaviour {
 		string val = i.text;
 		if (save != val) {
 			GameObject.Destroy (GameObject.Find ("Manager(Clone)"));
-			GameObject.Instantiate (manager);
+			GameObject m = GameObject.Instantiate (manager);
+			m.GetComponent<OSCSender>().remoteIp = val;
 			save = val;
 		}
 	}
