@@ -1,0 +1,49 @@
+Initialize engine version: 5.1.1f1 (2046fc06d4d8)
+GfxDevice: creating device client; threaded=1
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.0]
+    Renderer: Intel(R) HD Graphics Family (ID=0xa16)
+    Vendor:   Intel
+    VRAM:     128 MB
+Begin MonoManager ReloadAssembly
+Platform assembly: C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\UnityEngine.dll (this message is harmless)
+Loading C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\UnityEngine.dll into Unity Child Domain
+Platform assembly: C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\Assembly-CSharp-firstpass.dll (this message is harmless)
+Loading C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\Assembly-CSharp-firstpass.dll into Unity Child Domain
+Platform assembly: C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\Assembly-CSharp.dll (this message is harmless)
+Loading C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\Assembly-CSharp.dll into Unity Child Domain
+Platform assembly: C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\UnityEngine.UI.dll (this message is harmless)
+Loading C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
+Platform assembly: C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
+Loading C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
+Platform assembly: C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
+Loading C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
+- Completed reload, in  0.995 seconds
+desktop: 1600x900 50Hz; virtual: 1600x900 at 0,0
+<RI> Initializing input.
+<RI> Input initialized.
+<RI> Initialized touch support.
+Platform assembly: C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\System.Core.dll (this message is harmless)
+Platform assembly: C:\Users\alexr_000\Documents\GitHub\TunnelVision\WindowsKinect\test_Data\Managed\System.dll (this message is harmless)
+Setting up 1 worker threads for Enlighten.
+  Thread -> id: 73fc8 -> priority: 1 
+Unloading 2 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 1.336743 ms
+
+Unloading 4 unused Assets to reduce memory usage. Loaded Objects now: 346.
+Total: 0.814526 ms (FindLiveObjects: 0.063634 ms CreateObjectMapping: 0.099763 ms MarkObjects: 0.616642 ms  DeleteObjects: 0.032022 ms)
+
+Unloading 1 Unused Serialized files (Serialized files now loaded: 0)
+UnloadTime: 1.026779 ms
+
+Unloading 3 unused Assets to reduce memory usage. Loaded Objects now: 346.
+Total: 0.868308 ms (FindLiveObjects: 0.112490 ms CreateObjectMapping: 0.107974 ms MarkObjects: 0.614589 ms  DeleteObjects: 0.029969 ms)
+
+NullReferenceException: Facebook object is not yet loaded.  Did you call FB.Init()?
+  at Facebook.Unity.FB.get_FacebookImpl () [0x00000] in <filename unknown>:0 
+  at Facebook.Unity.FB.LogAppEvent (System.String logEvent, Nullable`1 valueToSum, System.Collections.Generic.Dictionary`2 parameters) [0x00000] in <filename unknown>:0 
+  at Facebook.Unity.Example.AppEvents.GetGui () [0x00000] in <filename unknown>:0 
+  at Facebook.Unity.Example.MenuBase.OnGUI () [0x00000] in <filename unknown>:0 
+ 
+(Filename:  Line: -1)
+
