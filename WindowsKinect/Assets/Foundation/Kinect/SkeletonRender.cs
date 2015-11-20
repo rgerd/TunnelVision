@@ -147,7 +147,7 @@ public class SkeletonRender : MonoBehaviour {
 			float zval = (int) ((jointObj.position.z) * 10000)/10000f;
 			save[(int) jt] += xval.ToString() + " " + yval.ToString() + " " + zval.ToString() + " ";
 		}
-		message = "/" + save [3] + save [20] + save [8] + save [4] + save [9] + save [5] +
+		message = "/" + body.HandLeftState.ToString() + " " + body.HandRightState.ToString() + " " + save [3] + save [20] + save [8] + save [4] + save [9] + save [5] +
 			save [0] + save [10] + save [6] + save [16] + save [12] + save [17] + save [13] + 
 			save [18] + save [14];
 	}
