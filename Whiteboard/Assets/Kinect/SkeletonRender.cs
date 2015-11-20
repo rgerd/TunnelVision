@@ -260,7 +260,7 @@ public class SkeletonRender : Photon.MonoBehaviour {
         drawCircle(tex, int.Parse(x), int.Parse(y), int.Parse(markerRadius), Color.red);
     }
 
-
+     
     private void drawCircle(Texture2D tex, int cx, int cy, int r, Color col)
     {
         int x, y, px, nx, py, ny, d;
