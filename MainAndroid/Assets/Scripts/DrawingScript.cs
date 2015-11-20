@@ -11,51 +11,45 @@ public class DrawingScript : MonoBehaviour {
 	private Vector3 leftCorrectDrawVec;
 	private Vector3 leftDrawVec;
 
-	private Vector2? lastMark;
+	private Vector2? lastMarkLeft;
+	private Vector2? lastMarkRight;
 
 	void Start () {}
 	
 	// Update is called once per frame
 	void Update () {
-		whiteboard_raytrace(BodyScript.joints[(int)BodyScript.JointType.ElbowRight].transform,
-		                    BodyScript.joints[(int)BodyScript.JointType.WristRight].transform, 
-		                    BodyScript.handRightState, 
-		                    GameObject.Find("RightHandDraw").GetComponent<LineRenderer>(), "right");
+		Vector3 rightCorrectDrawVec = BodyScript.joints [(int)BodyScript.JointType.WristRight].transform.position - BodyScript.joints [(int)BodyScript.JointType.ElbowRight].transform.position;
+		Vector3 leftCorrectDrawVec  = BodyScript.joints [(int)BodyScript.JointType.WristLeft].transform.position  - BodyScript.joints [(int)BodyScript.JointType.ElbowLeft].transform.position;
 
-		whiteboard_raytrace(BodyScript.joints[(int)BodyScript.JointType.ElbowLeft].transform,
-		                    BodyScript.joints[(int)BodyScript.JointType.WristLeft].transform, 
-		                    BodyScript.handLeftState, 
-		                    GameObject.Find("LeftHandDraw").GetComponent<LineRenderer>(), "left");
+		if (BodyScript.handLeftState == "Closed") {
+			leftDrawVec = Vector3.Lerp (leftDrawVec, leftCorrectDrawVec, Time.deltaTime * 5);
+			whiteboard_raytrace (leftDrawVec, GameObject.Find ("LeftHandDraw").GetComponent<LineRenderer> (), "left");
+		} else {
+			leftDrawVec = leftCorrectDrawVec;
+			lastMarkLeft = null;
+		}
+
+		if (BodyScript.handRightState == "Closed") {
+			rightDrawVec = Vector3.Lerp (rightDrawVec, rightCorrectDrawVec, Time.deltaTime * 5);
+			whiteboard_raytrace (rightDrawVec, GameObject.Find ("RightHandDraw").GetComponent<LineRenderer> (), "right");
+		} else {
+			rightDrawVec = rightCorrectDrawVec;
+			lastMarkRight = null;
+		}
 	}
 
-	private void whiteboard_raytrace(Transform elbowObj, Transform handObj, string handState, LineRenderer lr, string side)
+	private void whiteboard_raytrace(Vector3 drawVec, Transform elbow, LineRenderer lr, string side)
 	{
 		RaycastHit hit;
-		Ray ray;
-		
-		if (side == "right")
-		{
-			rightCorrectDrawVec = handObj.position - elbowObj.position;
-			rightDrawVec = rightCorrectDrawVec;//Vector3.Lerp(rightDrawVec, rightCorrectDrawVec, Time.deltaTime * 2);
-			ray = new Ray(elbowObj.position, rightDrawVec);
-		}
-		else
-		{
-			leftCorrectDrawVec = handObj.position - elbowObj.position;
-			leftDrawVec = leftCorrectDrawVec;//Vector3.Lerp(leftDrawVec, leftCorrectDrawVec, Time.deltaTime * 2);
-			ray = new Ray(elbowObj.position, leftDrawVec);
-		}
-		
+		Ray ray = new Ray(elbow.position, drawVec);
 		
 		if (Physics.Raycast(ray, out hit))
 		{
 			if (hit.collider.tag == "whiteboard")
 			{
-				//Debug.Log("hit whiteboard");
 				markerColor = Color.red;
 				drawRayLine(lr, ray.origin, hit.point);
-				if (handState == "Closed")
-					drawWhiteboard(hit);
+				drawWhiteboard(hit, side);
 			}
 			else if (hit.collider.tag == "markerRed")
 			{
@@ -88,7 +82,7 @@ public class DrawingScript : MonoBehaviour {
 	}
 	
 	
-	private void drawWhiteboard(RaycastHit hit)
+	private void drawWhiteboard(RaycastHit hit, string side)
 	{
 		//Debug.DrawLine(ray.origin, hit.point);
 		Renderer rend = hit.transform.GetComponent<Renderer>();
@@ -97,12 +91,21 @@ public class DrawingScript : MonoBehaviour {
 		pixelUV.x *= tex.width;
 		pixelUV.y *= tex.height;
 		Vector2 thisMark = new Vector2 (pixelUV.x, pixelUV.y);
-		if (lastMark == null && thisMark != new Vector2(0, 0))
-			lastMark = thisMark;
+		if (side == "left") {
+			if(lastMarkLeft == null)
+				lastMarkLeft = thisMark;
+		} else if (side == "right") {
+			if(lastMarkRight == null)
+				lastMarkRight = thisMark;
+		}
 
-		drawCircle(tex, (Vector2) lastMark, thisMark, markerRadius, markerColor);
+		drawCircle(tex, (Vector2) (side == "left" ? lastMarkLeft : lastMarkRight), thisMark, markerRadius, markerColor);
 
-		lastMark = new Vector2 (pixelUV.x, pixelUV.y);
+		if (side == "left") {
+			lastMarkLeft = new Vector2 (pixelUV.x, pixelUV.y);
+		} else if (side == "right") {
+			lastMarkRight = new Vector2 (pixelUV.x, pixelUV.y);
+		}
 		tex.Apply();
 	}
 	
