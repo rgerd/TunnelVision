@@ -93,7 +93,7 @@ public class BodyScript : Photon.MonoBehaviour {
 		
 		//PhotonNetwork.JoinRoom("Whiteboard");
 		
-		PhotonNetwork.JoinOrCreateRoom("Whiteboard", new RoomOptions() { maxPlayers = 2 }, TypedLobby.Default);
+		PhotonNetwork.JoinOrCreateRoom("Whiteboard", new RoomOptions() { maxPlayers = 10 }, TypedLobby.Default);
 		//}
 	}
 

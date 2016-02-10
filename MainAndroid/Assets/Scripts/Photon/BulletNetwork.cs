@@ -24,6 +24,7 @@ public class BulletNetwork : Photon.MonoBehaviour {
 			//controllerScript._characterState = (CharacterState)(int)stream.ReceiveNext();
 			correctPlayerPos = (Vector3)stream.ReceiveNext();
 			correctPlayerRot = (Quaternion)stream.ReceiveNext();
+			correctPlayerScale = (Vector3)stream.ReceiveNext();
 			//GetComponent<Rigidbody>().velocity = (Vector3)stream.ReceiveNext();
 			
 			if (!appliedInitialUpdate)
@@ -31,6 +32,7 @@ public class BulletNetwork : Photon.MonoBehaviour {
 				appliedInitialUpdate = true;
 				transform.position = correctPlayerPos;
 				transform.rotation = correctPlayerRot;
+				transform.localScale = correctPlayerScale;
 				//GetComponent<Rigidbody>().velocity = Vector3.zero;
 			}
 		}

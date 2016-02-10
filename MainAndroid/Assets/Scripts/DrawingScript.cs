@@ -115,13 +115,14 @@ public class DrawingScript : Photon.MonoBehaviour {
 		} else if (side == "right") {
 			lastMarkRight = new Vector2 (pixelUV.x, pixelUV.y);
 		}
-		tex.Apply();
+
 	}
 
 
 	[PunRPC]
 	void ChatMessage(string name, string x1, string y1, string x2, string y2, string markerRadius, string markerColor)
 	{
+		Debug.Log ("Draw RPC call: hit.transform.name: " + name);
 		//Debug.Log("ChatMessage " + name + " " + x + " " + y + " " + markerRadius + " " + markerColor);
 		Texture2D tex = GameObject.Find(name).transform.GetComponent<Renderer>().material.mainTexture as Texture2D;
 		drawCircle(tex, new Vector2(int.Parse(x1), int.Parse(y1)), new Vector2(int.Parse(x2), int.Parse(y2)), int.Parse(markerRadius), Color.red);
@@ -143,6 +144,8 @@ public class DrawingScript : Photon.MonoBehaviour {
 				}
 			}
 		}
+
+		tex.Apply();
 
 	}
 }
